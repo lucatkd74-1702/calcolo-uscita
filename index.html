@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calcolo Uscita</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #0b1f3a, #102f57);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.app {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 28px;
+  padding: 25px 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+  color: #0b1f3a;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #555;
+  margin: 15px 0 25px;
+}
+
+label {
+  font-size: 16px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* ✅ FIX COMPLETO iPhone */
+input[type="time"] {
+  width: 100%;
+  max-width: 100%;
+  font-size: 26px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 2px solid #d8dde6;
+  text-align: center;
+  margin-bottom: 20px;
+
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+}
+
+/* icona orologio iOS */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.4);
+}
+
+.quick-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.quick-buttons button {
+  font-size: 14px;
+  padding: 10px;
+  background: #eef2f7;
+  border: 1px solid #ccd4df;
+  border-radius: 12px;
+}
+
+button.main {
+  width: 100%;
+  border: none;
+  border-radius: 18px;
+  padding: 18px;
+  font-size: 20px;
+  font-weight: bold;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+button.main:active {
+  transform: scale(0.98);
+}
+
+.result {
+  margin-top: 20px;
+  background: #eaf7ef;
+  border: 2px solid #2ecc71;
+  color: #0b7a34;
+  border-radius: 22px;
+  padding: 20px;
+  display: none;
+}
+
+.result small {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.time {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.note {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+  <h1>Calcolo Uscita</h1>
+  <div class="subtitle">Orario di uscita dopo 7 ore e 42 minuti</div>
+
+  <label>Orario di entrata</label>
+  <input type="time" id="entrata">
+
+  <div class="quick-buttons">
+    <button onclick="setOra('08:00')">08:00</button>
+    <button onclick="setOra('08:30')">08:30</button>
+    <button onclick="setOra('09:00')">09:00</button>
+    <button onclick="setOra('09:30')">09:30</button>
+    <button onclick="setOra('10:00')">10:00</button>
+    <button onclick="setOraAttuale()">Ora attuale</button>
+  </div>
+
+  <button class="main" onclick="calcola()">Calcola uscita</button>
+
+  <div class="result" id="boxRisultato">
+    <small>Puoi uscire alle</small>
+    <div class="time" id="risultato">--:--</div>
+  </div>
+
+  <div class="note">
+    Calcolo fisso: entrata + 7 ore e 42 minuti
+  </div>
+</div>
+
+<script>
+function calcola() {
+  const input = document.getElementById("entrata").value;
+
+  if (!input) {
+    alert("Inserisci l'orario di entrata");
+    return;
+  }
+
+  let [ore, minuti] = input.split(":").map(Number);
+
+  minuti += 42;
+  ore += 7 + Math.floor(minuti / 60);
+  minuti = minuti % 60;
+  ore = ore % 24;
+
+  const uscita =
+    String(ore).padStart(2, "0") + ":" +
+    String(minuti).padStart(2, "0");
+
+  document.getElementById("risultato").innerText = uscita;
+  document.getElementById("boxRisultato").style.display = "block";
+}
+
+function setOra(ora) {
+  document.getElementById("entrata").value = ora;
+  calcola();
+}
+
+function setOraAttuale() {
+  const adesso = new Date();
+  const ore = String(adesso.getHours()).padStart(2, "0");
+  const minuti = String(adesso.getMinutes()).padStart(2, "0");
+
+  document.getElementById("entrata").value = ore + ":" + minuti;
+  calcola();
+}
+</script>
+
+</body>
+</html>
